@@ -1,0 +1,65 @@
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+USE ieee.std_logic_arith.all; 
+USE ieee.std_logic_unsigned.all;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity seven_counter is
+	PORT( clk : in STD_LOGIC;
+			my_out : out STD_LOGIC_VECTOR(6 downto 0) );
+end seven_counter;
+
+architecture Structural of seven_counter is
+--component CB8CE  
+--    port (     
+--	 C : in STD_LOGIC;      
+--	 CE : in STD_LOGIC; 
+--	 CLR : in STD_LOGIC;     
+--	 Q : out STD_LOGIC_VECTOR(7 downto 0);
+--	 CEO : out std_logic;
+--	 TC : out std_logic );
+--end component;
+component CB8CE is
+port (
+    CEO : out STD_LOGIC;
+    Q   : out STD_LOGIC_VECTOR(7 downto 0);
+    TC  : out STD_LOGIC;
+    C   : in STD_LOGIC;
+    CE  : in STD_LOGIC;
+    CLR : in STD_LOGIC
+    );
+end component;
+  signal temp_out : STD_LOGIC_VECTOR( 7 downto 0) ;
+  signal dont_use1 : std_logic;
+   signal dont_use2 : std_logic;
+  
+
+begin
+	--p1 : CB8CE port map ( clk, '1', '0', temp_out, dont_use1, dont_use2);
+	p1 : CB8CE port map( CEO => dont_use1, Q => temp_out, TC => dont_use2, C => clk, CE => '1', CLR => '0');
+	my_out <= temp_out(6 downto 0);
+--	--temp <= "0000000";
+--	process(clk)
+--	begin
+--	if (clk'event and clk = '1') then
+--		if temp="1111111" then temp<="0000000"; 
+--		
+--		else temp <= temp + "0000001";
+--		end if;
+--	else temp <= temp;
+--	end if;
+--	end process;
+--	
+--		
+--	my_out <= temp; 
+
+end Structural;

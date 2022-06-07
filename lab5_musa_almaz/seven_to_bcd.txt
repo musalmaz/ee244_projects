@@ -1,0 +1,58 @@
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
+use IEEE.math_real.all;
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity seven_to_bcd is
+	PORT( inp : in std_logic_vector(6 downto 0);
+			--clock : in std_logic;
+			A0 : out std_logic_vector(3 downto 0); 
+			A1 : out std_logic_vector(3 downto 0);
+			A2 : out std_logic_vector(3 downto 0);
+			A3 : out std_logic_vector(3 downto 0));
+end seven_to_bcd;
+
+architecture Structural of seven_to_bcd is
+	signal e : std_logic_vector(3 downto 0);
+	signal m : std_logic_vector(2 downto 0);
+	signal value : integer range -2000 to 2000;
+
+	signal e_int : integer range -15 to 15;
+	signal m_int : integer range -7 to 7;
+	signal binler : integer range 0 to 3;
+	signal yuzler : integer range -10 to 10;
+	signal onlar : integer range -10 to 10;
+	signal birler : integer range -10 to 10;
+	signal temp1 : integer range -1000 to 1000;
+	signal temp2 : integer range -100 to 100;
+	
+
+begin
+	e <= inp(3 downto 0);
+	m <= inp(6 downto 4);
+	e_int <= to_integer(unsigned(e));
+	m_int <= to_integer(unsigned(m));
+	value <= e_int * 2**m_int;
+	binler <= value / 1000 ;
+	birler <= value mod 10;
+	temp1 <= value - (1000 * binler);
+	yuzler <= temp1 / 100;
+	temp2 <= temp1 - (100*yuzler);
+	onlar <= temp2 / 10;
+	A0 <= std_logic_vector(to_unsigned(birler, A0'length));
+	A1 <= std_logic_vector(to_unsigned(onlar, A1'length));
+	A2 <= std_logic_vector(to_unsigned(yuzler, A2'length));
+	A3 <= std_logic_vector(to_unsigned(binler, A3'length));
+	
+
+
+end Structural;

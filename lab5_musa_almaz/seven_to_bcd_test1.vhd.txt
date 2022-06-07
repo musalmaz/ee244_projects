@@ -1,0 +1,59 @@
+--------------------------------------------------------------------------------
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+ 
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--USE ieee.numeric_std.ALL;
+ 
+ENTITY test1 IS
+END test1;
+ 
+ARCHITECTURE behavior OF test1 IS 
+ 
+    -- Component Declaration for the Unit Under Test (UUT)
+ 
+    COMPONENT seven_to_bcd
+    PORT(
+         inp : IN  std_logic_vector(6 downto 0);
+         A0 : OUT  std_logic_vector(3 downto 0);
+         A1 : OUT  std_logic_vector(3 downto 0);
+         A2 : OUT  std_logic_vector(3 downto 0);
+         A3 : OUT  std_logic_vector(3 downto 0)
+        );
+    END COMPONENT;
+    
+
+   --Inputs
+   signal inp : std_logic_vector(6 downto 0) := (others => '0');
+
+ 	--Outputs
+   signal A0 : std_logic_vector(3 downto 0);
+   signal A1 : std_logic_vector(3 downto 0);
+   signal A2 : std_logic_vector(3 downto 0);
+   signal A3 : std_logic_vector(3 downto 0);
+   -- No clocks detected in port list. Replace <clock> below with 
+   -- appropriate port name 
+ 
+ --  constant <clock>_period : time := 10 ns;
+ 
+BEGIN
+uut: seven_to_bcd PORT MAP (
+          inp => inp,
+          A0 => A0,
+          A1 => A1,
+          A2 => A2,
+          A3 => A3
+        );
+tb : process
+begin
+	inp <= "1111111";
+	wait for 100 ns;
+	inp <= "1000001";
+	-- Instantiate the Unit Under Test (UUT)
+   
+
+wait;
+end process;
+
+END;

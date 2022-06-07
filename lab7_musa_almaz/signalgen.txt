@@ -1,0 +1,61 @@
+LIBRARY ieee ;
+USE ieee.std_logic_1164.all ;
+USE ieee.std_logic_signed.all ;
+USE ieee.std_logic_arith.all ;
+
+
+entity signalgen is
+	Port (
+        reset : in STD_LOGIC;
+        clk : in STD_LOGIC;
+        vsync : out STD_LOGIC;
+        hsync : out STD_LOGIC;
+		  flag : out std_logic
+		  
+    );
+end signalgen;
+
+ architecture Behavioral of signalgen is
+  
+begin
+    process(clk,reset)
+	 
+	   variable hcounter: integer range 0 to 799 := 0;
+    variable vcounter: integer range 0 to 520 := 0;
+	 
+    begin
+        if (reset = '1') then
+            vcounter := 0;
+            hcounter := 0;
+            vsync <= '0';
+            hsync <= '0';
+        elsif rising_edge(clk) then
+                hcounter := hcounter + 1;
+                if (hcounter = 799) then
+                    hcounter := 0;
+                    vcounter := vcounter +1;
+						  --flag <= '1';
+                end if;
+					 
+					 if ( hcounter < 144) then
+						flag <= '1';
+					else
+						flag <= '0';
+					end if;
+                if (vcounter = 520) then
+                    vcounter := 0;
+                end if;
+                if (hcounter < 96) then
+                    hsync <= '0';
+                else
+                    hsync <= '1';
+                end if;
+
+                if (vcounter < 2) then
+                    vsync <= '0';
+                else
+                    vsync <= '1';
+                end if;
+        end if;
+    end process;
+end Behavioral;

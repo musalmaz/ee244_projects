@@ -1,0 +1,117 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    19:48:56 05/13/2022 
+-- Design Name: 
+-- Module Name:    main - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity lab6 is
+	Port(CLK : in std_logic;
+			SSEG_C : out STD_LOGIC_VECTOR (7 downto 0);
+			SSEG_A : out STD_LOGIC_VECTOR (3 downto 0) );
+end lab6;
+
+architecture structural of lab6 is
+-- frequency divider 
+component divider port(CLK  : in    std_logic; 
+								final_clock : out   std_logic);
+end component;
+-- counter
+component counter port (clk: in std_logic; 
+										my_out : out STD_LOGIC_VECTOR(7 downto 0));
+end component;
+--find prime and convert bcd
+component idiocy
+	port(inp : in std_logic_vector(7 downto 0);
+			--my_clock : in std_logic;
+			binler : out std_logic_vector(3 downto 0);
+			yuzler: out std_logic_vector(3 downto 0);
+			onlar : out std_logic_vector(3 downto 0);
+			birler: out std_logic_vector(3 downto 0)
+			);
+end component;
+-- convert seven segment
+component bcdtoSeven port ( d: in std_logic_vector (3 downto 0); 
+			s: out std_logic_vector ( 6 downto 0) ); 
+	end component;
+	--nexy
+	component nexys port( 
+		MY_CLK 	: in  STD_LOGIC;
+		DIGIT0  : in  STD_LOGIC_VECTOR (7 downto 0);
+		DIGIT1  : in  STD_LOGIC_VECTOR (7 downto 0);
+		DIGIT2  : in  STD_LOGIC_VECTOR (7 downto 0);
+		DIGIT3  : in  STD_LOGIC_VECTOR (7 downto 0);
+		SSEG_CA : out STD_LOGIC_VECTOR (7 downto 0);
+		SSEG_AN : out STD_LOGIC_VECTOR (3 downto 0) );
+	end component;
+
+signal final_clk : std_logic;	
+signal temp1 : std_logic_vector(7 downto 0);
+signal temp_birler : std_logic_vector( 3 downto 0);
+signal temp_onlar : std_logic_vector( 3 downto 0);
+signal temp_yuzler : std_logic_vector( 3 downto 0);
+signal temp_binler : std_logic_vector( 3 downto 0);
+
+signal B0 : std_logic_vector(6 downto 0);
+signal B1 : std_logic_vector(6 downto 0);
+signal B2 : std_logic_vector(6 downto 0);
+signal B3 : std_logic_vector(6 downto 0);
+
+signal temp_B0 : std_logic_vector(7 downto 0);
+signal temp_B1 : std_logic_vector(7 downto 0);
+signal temp_B2 : std_logic_vector(7 downto 0);
+signal temp_B3 : std_logic_vector(7 downto 0);
+begin
+	p1 : divider port map ( CLK => CLK, final_clock => final_clk );
+	-- 8 bit counter p2
+	p2 : counter port map ( clk => final_clk, my_out => temp1);
+	--find prime and convert bcd
+	p3 : idiocy port map ( inp => temp1, 
+										binler => temp_binler, yuzler => temp_yuzler, onlar => temp_onlar, 
+										birler => temp_birler);
+										
+	-- convert bcd to seven segment
+	p4 : bcdtoSeven port map( d=> temp_birler, s => B0);
+	p5 : bcdtoSeven port map( d=> temp_onlar, s => B1);
+	p6 : bcdtoSeven port map( d=> temp_yuzler, s => B2);
+	p7 : bcdtoSeven port map( d=> temp_binler, s => B3);
+	--indirgeme
+	temp_B0(6 downto 0) <=  B0; --birler
+	temp_B0(7) <= '1';
+	temp_B1(6 downto 0) <=  B1;--onlar
+	temp_B1(7) <= '1';
+	temp_B2(6 downto 0) <=  B2;
+	temp_B2(7) <= '1';
+	temp_B3(6 downto 0) <=  B3;
+	temp_B3(7) <= '1';
+	
+	p8 : nexys port map( MY_CLK => CLK, DIGIT0 => temp_B3, DIGIT1 => temp_B2,
+								DIGIT2 => temp_B1,DIGIT3 => temp_B0,SSEG_CA => SSEG_C,SSEG_AN => SSEG_A);
+	
+
+end structural;
+

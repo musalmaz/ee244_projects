@@ -1,0 +1,107 @@
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+use ieee.numeric_std.all;
+use IEEE.math_real.all;
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity lab5 is
+	port(CLK  : in    std_logic; 
+	SSEG_C : out STD_LOGIC_VECTOR (7 downto 0);
+		SSEG_A : out STD_LOGIC_VECTOR (3 downto 0) );
+	
+end lab5;
+
+architecture structural of lab5 is
+	component divider port(CLK  : in    std_logic; 
+								final_clock : out   std_logic);
+	end component;
+	
+	component seven_counter port (clk: in std_logic; 
+										my_out : out STD_LOGIC_VECTOR(6 downto 0));
+	end component;
+	
+	component seven_to_bcd port(	inp : in std_logic_vector(6 downto 0);
+			--clock : in std_logic;
+			A0 : out std_logic_vector(3 downto 0); 
+			A1 : out std_logic_vector(3 downto 0);
+			A2 : out std_logic_vector(3 downto 0);
+			A3 : out std_logic_vector(3 downto 0));
+	end component;
+	
+	component bcdtoSeven port ( d: in std_logic_vector (3 downto 0); 
+			s: out std_logic_vector ( 6 downto 0) ); 
+	end component;
+	
+	component nexys port( 
+		MY_CLK 	: in  STD_LOGIC;
+		DIGIT0  : in  STD_LOGIC_VECTOR (7 downto 0);
+		DIGIT1  : in  STD_LOGIC_VECTOR (7 downto 0);
+		DIGIT2  : in  STD_LOGIC_VECTOR (7 downto 0);
+		DIGIT3  : in  STD_LOGIC_VECTOR (7 downto 0);
+		SSEG_CA : out STD_LOGIC_VECTOR (7 downto 0);
+		SSEG_AN : out STD_LOGIC_VECTOR (3 downto 0) );
+	end component;
+	
+	
+	--for all: freq use entity work.divider(behavioral);
+	--for all : mycounter use entity work.seven_counter(structural);
+	--for all : tobcd use entity work.seven_to_bcd(structural);
+	--for all : to_seven use entity work.bcdtoSeven(structural);
+	--for all : nexy use entity work.nexys(behavioral);
+signal final_clk : std_logic;
+signal temp1 : std_logic_vector(6 downto 0); -- between counter and seven_to_bcd
+-- BCD outputs
+signal T0 : std_logic_vector(3 downto 0);
+signal T1 : std_logic_vector(3 downto 0);
+signal T2 : std_logic_vector(3 downto 0);
+signal T3 : std_logic_vector(3 downto 0);
+--
+-- temporary signals
+signal B0 : std_logic_vector(6 downto 0);
+signal B1 : std_logic_vector(6 downto 0);
+signal B2 : std_logic_vector(6 downto 0);
+signal B3 : std_logic_vector(6 downto 0);
+signal temp_B0 : std_logic_vector(7 downto 0);
+signal temp_B1 : std_logic_vector(7 downto 0);
+signal temp_B2 : std_logic_vector(7 downto 0);
+signal temp_B3 : std_logic_vector(7 downto 0);
+begin
+-- frquency divider p1
+	p1 : divider port map ( CLK => CLK, final_clock => final_clk );
+	-- 7 bit counter p2
+	p2 : seven_counter port map ( clk => final_clk, my_out => temp1);
+	-- 7 bit to bcd p3
+	p3 : seven_to_bcd port map(inp => temp1, A0 => T0, A1 => T1, A2 => T2, A3 => T3);
+	-- bcd to display results(7 bit) p4, p5, p6, p7
+	p4 : bcdtoSeven port map( d=> T0, s => B0);
+	p5 : bcdtoSeven port map( d=> T1, s => B1);
+	p6 : bcdtoSeven port map( d=> T2, s => B2);
+	p7 : bcdtoSeven port map( d=> T3, s => B3);
+	-- final part, indirgeme p8(nexy)
+	temp_B0(6 downto 0) <=  B0; --birler
+	temp_B0(7) <= '1';
+	temp_B1(6 downto 0) <=  B1;--onlar
+	temp_B1(7) <= '1';
+	temp_B2(6 downto 0) <=  B2;
+	temp_B2(7) <= '1';
+	temp_B3(6 downto 0) <=  B3;
+	temp_B3(7) <= '1';
+	
+	p8 : nexys port map( MY_CLK => CLK, DIGIT0 => temp_B3, DIGIT1 => temp_B2,DIGIT2 => temp_B1,DIGIT3 => temp_B0,SSEG_CA => SSEG_C,SSEG_AN => SSEG_A);
+	
+	
+	
+	
+	
+
+end structural;

@@ -1,0 +1,47 @@
+LIBRARY ieee ; 
+USE ieee.std_logic_1164.all ; 
+USE ieee.std_logic_signed.all ;  
+USE ieee.std_logic_arith.all ; 
+USE ieee.std_logic_unsigned.all; 
+ 
+entity labf is      
+  port (                       
+         clk: in std_logic;            
+         vsync: out std_logic;            
+         hsync: out std_logic;             
+         red: out std_logic_vector(2 downto 0);           
+         green: out std_logic_vector(2 downto 0);          
+         blue: out std_logic_vector(1 downto 0));
+  end;  
+ 
+architecture behavioral of labf is  
+  component signalgen is
+    Port (
+          Reset : in STD_LOGIC;
+          Clk : in STD_LOGIC;
+          Vsync : out STD_LOGIC;
+          Hsync : out STD_LOGIC;
+			 flag : out std_logic
+      );
+  end component;
+  component counter is
+    Port (
+          clk : in  STD_LOGIC;
+          cout: out STD_LOGIC
+      );
+  end component;
+  component colorgen is      
+  port (            
+         reset: in std_logic;           
+         clk: in std_logic;			
+         red: out std_logic_vector(2 downto 0);           
+         green: out std_logic_vector(2 downto 0);          
+         blue: out std_logic_vector(1 downto 0));
+  end component;
+  signal CLK25,y, temp : STD_LOGIC;
+  begin
+	 y <= '0' ;
+    c0: counter port map(clk => clk, cout => CLK25);
+    c1: colorgen port map(reset => temp, clk => CLK25, red => red, green => green, blue => blue);
+    c2: signalgen port map(Reset => y, Clk => CLK25, Vsync => vsync, Hsync => hsync, flag => temp);
+end behavioral; 

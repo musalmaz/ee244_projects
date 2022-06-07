@@ -1,0 +1,13 @@
+Net SSEG_C<0> LOC=T17  |  IOSTANDARD=LVCMOS33; # Connected to CA 
+Net SSEG_C<1> LOC=T18  |  IOSTANDARD=LVCMOS33; # Connected to CB 
+Net SSEG_C<2> LOC=U17  |  IOSTANDARD=LVCMOS33; # Connected to CC 
+Net SSEG_C<3> LOC=U18  |  IOSTANDARD=LVCMOS33; # Connected to CD 
+Net SSEG_C<4> LOC=M14  |  IOSTANDARD=LVCMOS33; # Connected to CE 
+Net SSEG_C<5> LOC=N14  |  IOSTANDARD=LVCMOS33; # Connected to CF
+Net SSEG_C<6> LOC=L14  |  IOSTANDARD=LVCMOS33; # Connected to CG 
+Net SSEG_C<7> LOC=M13  |  IOSTANDARD=LVCMOS33; # Connected to DP  
+Net SSEG_A<0> LOC=N16  |  IOSTANDARD=LVCMOS33; # Connected to AN0 
+Net SSEG_A<1> LOC=N15  |  IOSTANDARD=LVCMOS33; # Connected to AN1 
+Net SSEG_A<2> LOC=P18  |  IOSTANDARD=LVCMOS33; # Connected to AN2 
+Net SSEG_A<3> LOC=P17  |  IOSTANDARD=LVCMOS33; # Connected to AN3  
+Net CLK LOC=V10  |  IOSTANDARD=LVCMOS33; # Connected to board clock 

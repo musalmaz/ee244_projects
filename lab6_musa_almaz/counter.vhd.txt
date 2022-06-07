@@ -1,0 +1,60 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date:    21:58:55 05/15/2022 
+-- Design Name: 
+-- Module Name:    counter - Behavioral 
+-- Project Name: 
+-- Target Devices: 
+-- Tool versions: 
+-- Description: 
+--
+-- Dependencies: 
+--
+-- Revision: 
+-- Revision 0.01 - File Created
+-- Additional Comments: 
+--
+----------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity counter is
+	PORT( clk : in STD_LOGIC;
+			my_out : out STD_LOGIC_VECTOR(7 downto 0) );
+end counter;
+
+architecture Behavioral of counter is
+component CB8CE is
+port (
+    CEO : out STD_LOGIC;
+    Q   : out STD_LOGIC_VECTOR(7 downto 0);
+    TC  : out STD_LOGIC;
+    C   : in STD_LOGIC;
+    CE  : in STD_LOGIC;
+    CLR : in STD_LOGIC
+    );
+end component;
+
+  signal dont_use1 : std_logic;
+   signal dont_use2 : std_logic;
+  
+
+begin
+
+	p1 : CB8CE port map( CEO => dont_use1, Q => my_out, TC => dont_use2, C => clk, CE => '1', CLR => '0');
+
+
+
+end Behavioral;
+
