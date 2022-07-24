@@ -1,1 +1,1 @@
-These consists of ee244 VHDL Labs.
+These consist of ee244 VHDL Labs.
