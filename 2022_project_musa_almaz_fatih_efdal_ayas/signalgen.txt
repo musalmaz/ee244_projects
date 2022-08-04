@@ -1,0 +1,106 @@
+LIBRARY ieee ;
+USE ieee.std_logic_1164.all ;
+USE ieee.std_logic_signed.all ;
+USE ieee.std_logic_arith.all ;
+use IEEE.math_real.all;
+
+entity signalgen is
+	Port (
+        reset : in STD_LOGIC;
+        clk : in STD_LOGIC;
+        vsync : out STD_LOGIC;
+        hsync : out STD_LOGIC;
+		  flag : out std_logic;
+		  make_wh : out std_logic;
+		  alt_ust : out std_logic;
+		  draw : out std_logic
+		 -- tear : out std_logic --
+		 
+		  
+    );
+end signalgen;
+
+ architecture Behavioral of signalgen is
+  
+begin
+    process(clk,reset)
+		variable arr_vid : integer range 0 to 20 := 0; --
+	   variable hcounter: integer range 0 to 799 := 0;
+    variable vcounter: integer range 0 to 520 := 0;
+	 --variable draw_s : integer range 0 to 10 := 0; -- shape
+	 --variable test : integer range 0 to 910400; --
+    begin
+        if (reset = '1') then
+            vcounter := 0;
+            hcounter := 0;
+            vsync <= '0';
+            hsync <= '0';
+        elsif rising_edge(clk) then
+                hcounter := hcounter + 1;
+                if (hcounter = 799) then
+                    hcounter := 0;
+                    vcounter := vcounter +1;
+						  --flag <= '1';
+                end if;
+					 
+					 if ( hcounter < 144) then
+						flag <= '1';
+					else
+						flag <= '0';
+					end if;
+                if (vcounter = 520) then
+                    vcounter := 0;
+						  arr_vid := arr_vid + 1; ---
+                end if;
+					 -- shape
+--					 if arr_vid = 19 then
+--						draw_s := draw_s + 1;
+--					end if;
+					--
+                if (hcounter < 96) then
+                    hsync <= '0';
+                else
+                    hsync <= '1'; 
+                end if;
+					 if ( hcounter > 144  and hcounter < 250) or (hcounter > 700 and hcounter < 800) then
+							make_wh <= '1';
+						else
+							make_wh <= '0';
+						end if;
+					if ( vcounter > 2 and vcounter < 100 ) or ( vcounter > 380 and vcounter < 519) then 
+							alt_ust <= '1';
+						else
+							alt_ust <= '0';
+						end if;
+                if (vcounter <= 31)then
+                    vsync <= '0';
+                else
+                    vsync <= '1';
+                end if;
+					 if (( hcounter > 300 and hcounter < 350) and ( vcounter > 150 and vcounter < 200 )) or ((hcounter > 600 and hcounter < 650) and ( vcounter > 150 and vcounter < 200 )) or (( hcounter > 400 and hcounter < 600) and ( vcounter > 300 and vcounter < 320 ))then
+						draw <= '1';
+					 else
+						draw <= '0';
+					end if;
+					---
+					if (( hcounter > 400 and hcounter < 415) or ( hcounter > 585 and hcounter < 600)) and ( vcounter > 280 + arr_vid and vcounter < 300 + arr_vid ) then
+						draw <= '1';
+						--tear <= '1'; --
+					end if;
+					if  ( arr_vid > 10) then
+						if (( hcounter > 320 and hcounter < 330) or ( hcounter > 620 and hcounter < 630)) and ( vcounter > 210 + arr_vid and vcounter < 220 + arr_vid ) then
+					
+							draw <= '1';
+							
+						end if;
+					end if;
+					-- shape
+					--test := (((vcounter /2 - 180) ** 2) + ((hcounter/2 - 240) ** 2));
+--					if (draw_s = 9) then
+--						if ((vcounter  - 180) ** 2) < 32400 + ((hcounter - 240) ** 2) then
+--							draw <= '1';
+--						end if;
+--					end if;
+        end if;
+    end process;
+end Behavioral;
